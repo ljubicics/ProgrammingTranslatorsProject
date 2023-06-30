@@ -1,0 +1,39 @@
+          GRAMATIKA
+1.  PROGRAM -> main() MAINBLOK
+2.  MAINBLOK -> { var : PROMENLJIVEBLOK naredbe : NAREDBEBLOK}
+3.  PROMENLJIVEBLOK -> { DEKPROMENLJIVIH }
+4.  DEKPROMENLJIVIH -> DEKPROMENLJIVIH PROMENLJIVA 
+5. 		              | PROMENLJIVA
+6.  PROMENLJIVA -> id <- TIP := const
+7.  TIP -> int
+8.       | float
+9.	     | bool
+10. NAREDBEBLOK -> { NIZNAREDBI }
+11. NIZNAREDBI -> NIZNAREDBI NAREDBA
+12.             | NAREDBA
+13. NAREDBA -> ULAZ
+14.          | IZLAZ
+15.          | DODELA
+16.	         | WHILENAREDBA
+17.          | IFNAREDBA
+18. ULAZ -> scanf : id
+19. IZLAZ -> printf : id
+20. DODELA -> id := MATIZRAZ
+21. MATIZRAZ -> MATIZRAZ + CLAN
+22. 	      | MATIZRAZ - CLAN
+23.           | CLAN
+24. CLAN -> CLAN * DEOCLANA
+25.       | CLAN / DEOCLANA
+26.       | DEOCLANA
+27. DEOCLANA -> id
+28.           | const
+29. WHILENAREDBA -> while (id POREDJENJEIZRAZ const) WHILEBLOK
+30. POREDJENJEIZRAZ -> <
+31.                  | >
+32. 		         | =
+33.                  | <=
+34.                  | >=
+35. WHILEBLOK -> {NAREDBA}
+36. IFNAREDBA -> if(id POREDJENJEIZRAZ const TRUEBLOK else FALSEBLOK
+37. TRUEBLOK -> {NAREDBA}
+38. FALSEBLOK -> {NAREDBA}

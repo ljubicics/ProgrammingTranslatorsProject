@@ -1,0 +1,11 @@
+main() {
+    var: {
+        x <- int := 0
+    }
+    naredbe: {
+        printf : x
+        while(x<5) {
+                printf : x
+            }
+    }
+}

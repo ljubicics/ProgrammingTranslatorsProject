@@ -1,0 +1,329 @@
+import java_cup.runtime.*;
+import java.io.*;
+
+parser code {:
+   public static void main( String[] args)
+   {
+      try
+	  {
+		   FileReader file = new FileReader( args[0] );
+		   Scanner scanner = new MPLexer( file );
+		   MPParser parser = new MPParser( scanner );
+		   parser.parse();
+	  }
+	  catch( Exception e )
+	  {
+          e.printStackTrace();
+		   System.out.println(e);
+	  }
+   }
+:};
+
+// Terminal
+terminal main, var, bool, intidzer, plivajuci, scanf, printf, dok, ifkrec, elsekrec, naredbe, otvorenazagrada, zatvorenazagrada;
+terminal otvorenaviticasta, zatvorenaviticasta, plus, puta, minus, podeljeno, manje, vece, manjejednako, vecejednako;
+terminal jednako, dodelatipa, dodela, dvetacke, konstanta, id;
+
+// Non terminal
+non terminal PROGRAM, MAINBLOK, PROMENLJIVEBLOK, NAREDBEBLOK, DEKPROMENLJIVIH, PROMENLJIVA, TIP;
+non terminal NIZNAREDBI, NAREDBA, ULAZ, IZLAZ, DODELA, WHILENAREDBA, IFNAREDBA, MATIZRAZ, CLAN, DEOCLANA;
+non terminal POREDJENJEIZRAZ, WHILEBLOK, TRUEBLOK, FALSEBLOK;
+
+// Gramatika
+PROGRAM ::= main otvorenazagrada zatvorenazagrada MAINBLOK
+    {:
+        System.out.println( "Redukcija po smeni 1.");
+    :}
+    | main otvorenazagrada error
+        {:
+            System.out.println( "Nedostaje zatvorena zagrada nakon otvorene");
+            System.out.close();
+        :}
+    | main error
+        {:
+            System.out.println( "Nedostaje otvorena zagrada nakon main");
+            System.out.close();
+        :};
+
+MAINBLOK ::= otvorenaviticasta var dvetacke PROMENLJIVEBLOK naredbe dvetacke NAREDBEBLOK zatvorenaviticasta
+    {:
+        System.out.println("Redukcija po smeni 2");
+    :}
+    | otvorenaviticasta var dvetacke PROMENLJIVEBLOK naredbe dvetacke NAREDBEBLOK error
+        {:
+            System.out.println( "Nedostaje zatvorena viticasta");
+            System.out.close();
+        :}
+    | otvorenaviticasta var dvetacke PROMENLJIVEBLOK naredbe error
+        {:
+            System.out.println( "Nedostaju dve tacke");
+            System.out.close();
+        :}
+    | otvorenaviticasta var dvetacke PROMENLJIVEBLOK error
+        {:
+            System.out.println( "Nedostaju naredbe");
+            System.out.close();
+        :}
+    | otvorenaviticasta var error
+        {:
+            System.out.println( "Nedostaju dve tacke");
+            System.out.close();
+        :}
+    | otvorenaviticasta error
+        {:
+            System.out.println( "Nedostaje var promenljiva");
+            System.out.close();
+        :};
+
+PROMENLJIVEBLOK ::= otvorenaviticasta DEKPROMENLJIVIH zatvorenaviticasta
+    {:
+        System.out.println("Redukcija po smeni 3");
+    :}
+    | otvorenaviticasta DEKPROMENLJIVIH error
+        {:
+            System.out.println( "Nedostaje zatvorena viticasta");
+            System.out.close();
+        :};
+
+DEKPROMENLJIVIH ::= DEKPROMENLJIVIH PROMENLJIVA
+    {:
+        System.out.println("Redukcija po smeni 4");
+    :}
+    | PROMENLJIVA
+        {:
+            System.out.println("Redukcija po smeni 5");
+        :};
+
+PROMENLJIVA ::= id dodelatipa TIP dodela konstanta
+    {:
+       System.out.println("Redukcija po smeni 6");
+    :}
+    | id dodelatipa TIP dodela error
+        {:
+            System.out.println( "Nedostaje default vrednost");
+            System.out.close();
+        :}
+    | id dodelatipa TIP error
+        {:
+            System.out.println( "Nedostaje dodela");
+            System.out.close();
+        :}
+    | id error
+        {:
+            System.out.println( "Nedostaje dodela tipa");
+            System.out.close();
+        :};
+
+TIP ::= intidzer
+    {:
+        System.out.println("Redukcija po smeni 7");
+    :}
+    | plivajuci
+    {:
+        System.out.println("Redukcija po smeni 8");
+    :}
+    | bool
+    {:
+        System.out.println("Redukcija po smeni 9");
+    :};
+
+NAREDBEBLOK ::= otvorenaviticasta NIZNAREDBI zatvorenaviticasta
+    {:
+        System.out.println("Redukcija po smeni 10");
+    :}
+    | otvorenaviticasta NIZNAREDBI error
+        {:
+            System.out.println( "Nedostaje zatvorena viticasta");
+            System.out.close();
+        :};
+
+NIZNAREDBI ::= NIZNAREDBI NAREDBA
+    {:
+       System.out.println("Redukcija po smeni 11");
+    :}
+    | NAREDBA
+        {:
+            System.out.println("Redukcija po smeni 12");
+        :};
+
+NAREDBA ::= ULAZ
+    {:
+        System.out.println("Redukcija po smeni 13");
+    :}
+    | IZLAZ
+        {:
+            System.out.println("Redukcija po smeni 14");
+        :}
+    | DODELA
+        {:
+            System.out.println("Redukcija po smeni 15");
+        :}
+    | WHILENAREDBA
+        {:
+            System.out.println("Redukcija po smeni 16");
+        :}
+    | IFNAREDBA
+        {:
+            System.out.println("Redukcija po smeni 17");
+        :};
+
+ULAZ ::= scanf dvetacke id
+    {:
+        System.out.println("Redukcija po smeni 18");
+    :}
+    | scanf dvetacke error
+        {:
+            System.out.println( "Nedostaje id");
+            System.out.close();
+        :}
+    | scanf error
+        {:
+            System.out.println( "Nedostaju dve tacke");
+            System.out.close();
+        :};
+
+IZLAZ ::= printf dvetacke id
+    {:
+        System.out.println("Redukcija po smeni 19");
+    :}
+    | printf dvetacke error
+        {:
+            System.out.println( "Nedostaje id");
+            System.out.close();
+        :}
+    | printf error
+        {:
+            System.out.println( "Nedostaju dve tacke");
+            System.out.close();
+        :};
+
+DODELA ::= id dodela MATIZRAZ
+    {:
+        System.out.println("Redukcija po smeni 20");
+    :}
+    | id error
+        {:
+            System.out.println( "Nedostaje dodela");
+            System.out.close();
+        :};
+
+MATIZRAZ ::= MATIZRAZ plus CLAN
+    {:
+        System.out.println("Redukcija po smeni 21");
+    :}
+    | MATIZRAZ minus CLAN
+        {:
+            System.out.println("Redukcija po smeni 22");
+        :}
+    | CLAN
+        {:
+            System.out.println("Redukcija po smeni 23");
+        :};
+
+CLAN ::= CLAN puta DEOCLANA
+    {:
+        System.out.println("Redukcija po smeni 24");
+    :}
+    | CLAN podeljeno DEOCLANA
+        {:
+            System.out.println("Redukcija po smeni 25");
+        :}
+    | DEOCLANA
+        {:
+            System.out.println("Redukcija po smeni 26");
+        :};
+
+DEOCLANA ::= id
+    {:
+        System.out.println("Redukcija po smeni 27");
+    :}
+    | konstanta
+        {:
+            System.out.println("Redukcija po smeni 28");
+        :};
+
+WHILENAREDBA ::= dok otvorenazagrada id POREDJENJEIZRAZ konstanta zatvorenazagrada WHILEBLOK
+    {:
+        System.out.println("Redukcija po smeni 29");
+    :}
+    | dok otvorenazagrada POREDJENJEIZRAZ error
+       {:
+            System.out.println( "Nedostaje zatvorena zagrada");
+            System.out.close();
+       :}
+    | dok error
+       {:
+            System.out.println( "Nedostaje otvorena zagrada");
+            System.out.close();
+       :};
+
+POREDJENJEIZRAZ ::= manje
+    {:
+        System.out.println("Redukcija po smeni 30");
+    :}
+    | vece
+        {:
+            System.out.println("Redukcija po smeni 31");
+        :}
+    | jednako
+         {:
+             System.out.println("Redukcija po smeni 32");
+         :}
+    | manjejednako
+        {:
+            System.out.println("Redukcija po smeni 33");
+        :}
+    | vecejednako
+        {:
+            System.out.println("Redukcija po smeni 34");
+        :};
+
+WHILEBLOK ::= otvorenaviticasta NAREDBA zatvorenaviticasta
+    {:
+        System.out.println("Redukcija po smeni 35");
+    :}
+    | otvorenaviticasta NAREDBA error
+       {:
+            System.out.println( "Nedostaje otvorena zagrada");
+            System.out.close();
+       :};
+
+IFNAREDBA ::= ifkrec otvorenazagrada id POREDJENJEIZRAZ konstanta zatvorenazagrada TRUEBLOK elsekrec FALSEBLOK
+    {:
+        System.out.println("Redukcija po smeni 36");
+    :}
+    | ifkrec otvorenazagrada POREDJENJEIZRAZ zatvorenazagrada TRUEBLOK error
+       {:
+            System.out.println( "Nedostaje kljucna rec else");
+            System.out.close();
+       :}
+    | ifkrec otvorenazagrada POREDJENJEIZRAZ error
+       {:
+            System.out.println( "Nedostaje zatvorena zagrada");
+            System.out.close();
+       :}
+    | ifkrec error
+       {:
+            System.out.println( "Nedostaje otvorena zagrada");
+            System.out.close();
+       :};
+
+TRUEBLOK ::= otvorenaviticasta NAREDBA zatvorenaviticasta
+    {:
+        System.out.println("Redukcija po smeni 37");
+    :}
+    | otvorenaviticasta NAREDBA error
+       {:
+            System.out.println( "Nedostaje zatvorena viticasta zagrada");
+            System.out.close();
+       :};
+
+FALSEBLOK ::= otvorenaviticasta NAREDBA zatvorenaviticasta
+    {:
+        System.out.println("Redukcija po smeni 38");
+    :}
+    | otvorenaviticasta NAREDBA error
+        {:
+            System.out.println( "Nedostaje zatvorena viticasta zagrada");
+            System.out.close();
+        :};

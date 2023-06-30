@@ -1,0 +1,13 @@
+main() {
+var: {
+x<-int:=0
+y<-bool:=true
+}
+naredbe:{
+if (x<=5) {
+x := 2*3
+} else {
+x := 3+3
+}
+}
+}

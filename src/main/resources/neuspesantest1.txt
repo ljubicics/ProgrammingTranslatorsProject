@@ -1,0 +1,11 @@
+main( {
+var: {
+    x <- int := 0
+    y <- bool := true
+}
+naredbe: {
+    while(x<5) {
+        printf : x
+    }
+}
+}
